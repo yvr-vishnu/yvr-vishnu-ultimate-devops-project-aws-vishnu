@@ -121,4 +121,62 @@ In modules we dont need to
 rm -rf .terraform
 terraform init -reconfigure
 
+...................................................................................
+..................................................................................
 
+Deploying prcedure in Kubnernetes
+
+spin up an ec2 instacne 
+Install docker,kubectl,awscli 
+
+kubectl config view
+kubectl config current-context
+kubectl config use-context
+aws eks update-kubeconfig --region ap-south-1 --name my-eks-cluster
+kubectl get all
+git clone https://github.com/yvr-vishnu/ultimate-devops-project-demo.git
+cd ultimate-devops-project-demo/kubernetes
+
+#Create a servcie acccount
+kubectl apply -f serviceaccount.yaml
+kubectl apply -f complete-deploy.yaml
+
+#wait untill all pods comes up an running
+kubectl get pods
+kubectl get svc | grep frontendproxy
+
+with this you can see the IP 172.20.109.199 and port 8080
+
+Since this is private ip we will not be able to access site
+
+we need to create searvice lb for ths
+
+kubectl edit svc opentelemetry-demo-frontendproxy
+
+go to last of the page replace clster Ip with LoadBalancer
+
+It takes some time to create lb in the aws in backend
+
+kubectl get svc | grep forntendproxy
+
+lb public dns name:8080
+
+http://ab8700208c59545b4b6aa8fad2deb98b-1524806230.ap-south-1.elb.amazonaws.com:8080/cart
+
+we should be able to access site now successfully
+
+
+we will see how to use ingress instead of loadbalancer
+
+LB VS INGREES
+
+LB is not declerative
+    Does not allow to use host name of site like aws.com instead we are limited to use public dns name
+	https is not allowed
+	not be able to have custom features
+	LB Cost is more and can't be created for each microservice seperatly
+	Only will be able to ALB type in AWS but cant use F5, NGINX
+	
+
+...................................................................................
+..................................................................................
